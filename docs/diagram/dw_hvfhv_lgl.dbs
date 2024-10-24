@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="dw_hvfhv_lgl" database="LogicalDesign" id="LogicalDesign-47b" >
+	<schema name="INSTANCE" catalogname="dw_hvfhv_lgl" >
+		<table name="dim_date" prior="Entity" >
+			<column name="date_id" type="BIGINT" jt="-5" mandatory="y" />
+			<column name="year_number" type="INT" jt="4" />
+			<column name="month_number" type="INT" jt="4" />
+			<column name="day_number" type="INT" jt="4" />
+			<column name="week_number" type="INT" jt="4" />
+			<column name="hour_number" type="INT" jt="4" />
+			<column name="week_of_month" type="INT" jt="4" />
+			<column name="week_of_year" type="INT" jt="4" />
+			<column name="month_name" type="VARCHAR" length="50" jt="12" />
+			<column name="day_name" type="VARCHAR" length="50" jt="12" />
+			<column name="is_daylight_saving" type="BOOLEAN" jt="-7" />
+			<column name="timestamp_isoformat" type="DATETIME" length="12" jt="93" />
+			<index name="pk_dim_date" unique="PRIMARY_KEY" >
+				<column name="date_id" />
+			</index>
+		</table>
+		<table name="dim_license_type" prior="Entity" >
+			<column name="dim_license_type_id" type="INT" jt="4" mandatory="y" />
+			<column name="license_type" type="VARCHAR" length="10" jt="12" />
+			<column name="license_name" type="VARCHAR" length="100" jt="12" >
+				<comment><![CDATA[which designated whethere it is uber/lyft]]></comment>
+			</column>
+			<index name="pk_dim_license_type" unique="PRIMARY_KEY" >
+				<column name="dim_license_type_id" />
+			</index>
+		</table>
+		<table name="dim_location" prior="Entity" >
+			<column name="location_id" type="INT" jt="4" mandatory="y" />
+			<column name="borough" type="VARCHAR" length="100" jt="12" />
+			<column name="zone" type="VARCHAR" length="100" jt="12" />
+			<column name="zipcode" type="VARCHAR" length="6" jt="12" />
+			<column name="latitude" type="DOUBLE" jt="8" />
+			<column name="longitude" type="DOUBLE" jt="8" />
+			<index name="pk_dim_location" unique="PRIMARY_KEY" >
+				<column name="location_id" />
+			</index>
+		</table>
+		<table name="facts_trips" prior="facts_trip" >
+			<column name="fact_id" type="BIGINT" jt="-5" />
+			<column name="trip_miles" type="DOUBLE" jt="8" />
+			<column name="trip_time" type="DOUBLE" jt="8" />
+			<column name="base_passenger_fare" type="DECIMAL" length="10" decimal="2" jt="3" />
+			<column name="tolls" type="DECIMAL" length="10" decimal="2" jt="3" />
+			<column name="bcf" type="DECIMAL" length="10" decimal="2" jt="3" />
+			<column name="sales_tax" type="DECIMAL" length="10" decimal="2" jt="3" />
+			<column name="congestion_surcharge" type="DECIMAL" length="10" decimal="2" jt="3" />
+			<column name="airport_fee" type="DECIMAL" length="10" decimal="2" jt="3" />
+			<column name="tips" type="DECIMAL" length="10" decimal="2" jt="3" />
+			<column name="driver_pay" type="DECIMAL" length="10" decimal="2" jt="3" />
+			<column name="temperature" type="DOUBLE" jt="8" />
+			<column name="rain_precipitation" type="DOUBLE" jt="8" />
+			<column name="snow_precipitation" type="DOUBLE" jt="8" />
+			<column name="subway_fare" type="DECIMAL" jt="3" />
+			<column name="bus_fare" type="DECIMAL" length="10" decimal="2" jt="3" />
+			<column name="lirr_fare" type="DECIMAL" length="10" decimal="2" jt="3" />
+			<column name="mnr_fare" type="DECIMAL" length="10" decimal="2" jt="3" />
+			<column name="pickup_date_id" type="BIGINT" jt="-5" mandatory="y" />
+			<column name="dropoff_date_id" type="BIGINT" jt="-5" mandatory="y" />
+			<column name="pickup_location_id" type="INT" jt="4" mandatory="y" />
+			<column name="request_onscene_date_id" type="BIGINT" jt="-5" mandatory="y" />
+			<column name="dropoff_location_id" type="INT" jt="4" mandatory="y" />
+			<column name="request_date_id" type="BIGINT" jt="-5" />
+			<column name="license_type_id" type="INT" jt="4" mandatory="y" />
+			<column name="wait_time" type="DOUBLE" jt="8" />
+			<column name="profit_loss_subway" type="DECIMAL" length="10" decimal="2" jt="3" >
+				<comment><![CDATA[driverpay - subwayway]]></comment>
+			</column>
+			<column name="profit_loss_bus" type="DECIMAL" length="10" decimal="2" jt="3" />
+			<column name="profit_loss_lirr" type="DECIMAL" length="10" decimal="2" jt="3" />
+			<column name="profit_loss_mnr" type="DECIMAL" length="10" decimal="2" jt="3" />
+			<fk name="fk_facts_trips_dim_date" to_schema="dw_hvfhv_lgl.INSTANCE" to_table="dim_date" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="pickup_date_id" pk="date_id" />
+			</fk>
+			<fk name="fk_facts_trips_dim_date_0" to_schema="dw_hvfhv_lgl.INSTANCE" to_table="dim_date" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="dropoff_date_id" pk="date_id" />
+			</fk>
+			<fk name="fk_facts_trips_dim_license_type" to_schema="dw_hvfhv_lgl.INSTANCE" to_table="dim_license_type" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="license_type_id" pk="dim_license_type_id" />
+			</fk>
+			<fk name="fk_facts_trips_dim_location" to_schema="dw_hvfhv_lgl.INSTANCE" to_table="dim_location" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="pickup_location_id" pk="location_id" />
+			</fk>
+			<fk name="fk_facts_trips_dim_location_0" to_schema="dw_hvfhv_lgl.INSTANCE" to_table="dim_location" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="dropoff_location_id" pk="location_id" />
+			</fk>
+			<fk name="fk_facts_trips_dim_date_1" to_schema="dw_hvfhv_lgl.INSTANCE" to_table="dim_date" type="NonIdentifying" mandatory="n" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="request_date_id" pk="date_id" />
+			</fk>
+			<fk name="fk_facts_trips_dim_date_2" to_schema="dw_hvfhv_lgl.INSTANCE" to_table="dim_date" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="request_onscene_date_id" pk="date_id" />
+			</fk>
+		</table>
+	</schema>
+	<layout name="Default Layout" id="Layout-1fe6" show_relation="columns" >
+		<entity schema="dw_hvfhv_lgl.INSTANCE" name="dim_date" color="C1D8EE" x="51" y="340" />
+		<entity schema="dw_hvfhv_lgl.INSTANCE" name="dim_license_type" color="C1D8EE" x="816" y="170" />
+		<entity schema="dw_hvfhv_lgl.INSTANCE" name="dim_location" color="C1D8EE" x="102" y="51" />
+		<entity schema="dw_hvfhv_lgl.INSTANCE" name="facts_trips" color="C1D8EE" x="493" y="102" />
+	</layout>
+</project>

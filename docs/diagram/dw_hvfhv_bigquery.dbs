@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="dw_hvfhv_lgl" database="GoogleBigQuery" id="GoogleBigQuery-5f7" >
+	<schema name="INSTANCE" catalogname="dw_hvfhv_lgl" >
+		<table name="dim_date" >
+			<column name="date_id" type="int64" jt="4" mandatory="y" />
+			<column name="year_number" type="int64" jt="4" />
+			<column name="month_number" type="int64" jt="4" />
+			<column name="day_number" type="int64" jt="4" />
+			<column name="week_number" type="int64" jt="4" />
+			<column name="hour_number" type="int64" jt="4" />
+			<column name="week_of_month" type="int64" jt="4" />
+			<column name="week_of_year" type="int64" jt="4" />
+			<column name="month_name" type="string" length="50" jt="12" />
+			<column name="day_name" type="string" length="50" jt="12" />
+			<column name="is_daylight_saving" type="boolean" jt="16" />
+			<column name="timestamp_isoformat" type="datetime" length="12" jt="93" />
+			<index name="pk_dim_date" unique="PRIMARY_KEY" >
+				<column name="date_id" />
+			</index>
+		</table>
+		<table name="dim_license_type" >
+			<column name="dim_license_type_id" type="int64" jt="4" mandatory="y" />
+			<column name="license_type" type="string" length="10" jt="12" />
+			<column name="license_name" type="string" length="100" jt="12" >
+				<comment><![CDATA[which designated whethere it is uber/lyft]]></comment>
+			</column>
+			<index name="pk_dim_license_type" unique="PRIMARY_KEY" >
+				<column name="dim_license_type_id" />
+			</index>
+		</table>
+		<table name="dim_location" >
+			<column name="location_id" type="int64" jt="4" mandatory="y" />
+			<column name="borough" type="string" length="100" jt="12" />
+			<column name="zone" type="string" length="100" jt="12" />
+			<column name="zipcode" type="string" length="6" jt="12" />
+			<column name="latitude" type="bignumeric" jt="8" />
+			<column name="longitude" type="bignumeric" jt="8" />
+			<index name="pk_dim_location" unique="PRIMARY_KEY" >
+				<column name="location_id" />
+			</index>
+		</table>
+		<table name="facts_trips" >
+			<column name="fact_id" type="int64" jt="4" />
+			<column name="trip_miles" type="bignumeric" jt="8" />
+			<column name="trip_time" type="bignumeric" jt="8" />
+			<column name="base_passenger_fare" type="numeric" length="10" decimal="2" jt="2" />
+			<column name="tolls" type="numeric" length="10" decimal="2" jt="2" />
+			<column name="bcf" type="numeric" length="10" decimal="2" jt="2" />
+			<column name="sales_tax" type="numeric" length="10" decimal="2" jt="2" />
+			<column name="congestion_surcharge" type="numeric" length="10" decimal="2" jt="2" />
+			<column name="airport_fee" type="numeric" length="10" decimal="2" jt="2" />
+			<column name="tips" type="numeric" length="10" decimal="2" jt="2" />
+			<column name="driver_pay" type="numeric" length="10" decimal="2" jt="2" />
+			<column name="temperature" type="bignumeric" jt="8" />
+			<column name="rain_precipitation" type="bignumeric" jt="8" />
+			<column name="snow_precipitation" type="bignumeric" jt="8" />
+			<column name="subway_fare" type="numeric" jt="2" />
+			<column name="bus_fare" type="numeric" length="10" decimal="2" jt="2" />
+			<column name="lirr_fare" type="numeric" length="10" decimal="2" jt="2" />
+			<column name="mnr_fare" type="numeric" length="10" decimal="2" jt="2" />
+			<column name="pickup_date_id" type="int64" jt="4" mandatory="y" />
+			<column name="dropoff_date_id" type="int64" jt="4" mandatory="y" />
+			<column name="pickup_location_id" type="int64" jt="4" mandatory="y" />
+			<column name="request_onscene_date_id" type="int64" jt="4" mandatory="y" />
+			<column name="dropoff_location_id" type="int64" jt="4" mandatory="y" />
+			<column name="request_date_id" type="int64" jt="4" />
+			<column name="license_type_id" type="int64" jt="4" mandatory="y" />
+			<fk name="fk_facts_trips_dim_date" to_schema="dw_hvfhv_lgl.INSTANCE" to_table="dim_date" >
+				<fk_column name="pickup_date_id" pk="date_id" />
+			</fk>
+			<fk name="fk_facts_trips_dim_date_0" to_schema="dw_hvfhv_lgl.INSTANCE" to_table="dim_date" >
+				<fk_column name="dropoff_date_id" pk="date_id" />
+			</fk>
+			<fk name="fk_facts_trips_dim_license_type" to_schema="dw_hvfhv_lgl.INSTANCE" to_table="dim_license_type" >
+				<fk_column name="license_type_id" pk="dim_license_type_id" />
+			</fk>
+			<fk name="fk_facts_trips_dim_location" to_schema="dw_hvfhv_lgl.INSTANCE" to_table="dim_location" >
+				<fk_column name="pickup_location_id" pk="location_id" />
+			</fk>
+			<fk name="fk_facts_trips_dim_location_0" to_schema="dw_hvfhv_lgl.INSTANCE" to_table="dim_location" >
+				<fk_column name="dropoff_location_id" pk="location_id" />
+			</fk>
+			<fk name="fk_facts_trips_dim_date_1" to_schema="dw_hvfhv_lgl.INSTANCE" to_table="dim_date" >
+				<fk_column name="request_date_id" pk="date_id" />
+			</fk>
+			<fk name="fk_facts_trips_dim_date_2" to_schema="dw_hvfhv_lgl.INSTANCE" to_table="dim_date" >
+				<fk_column name="request_onscene_date_id" pk="date_id" />
+			</fk>
+		</table>
+	</schema>
+	<layout name="Default Layout" id="Layout-deb" confirmed="y" show_relation="columns" >
+		<entity schema="dw_hvfhv_lgl.INSTANCE" name="dim_date" color="C1D8EE" x="51" y="357" />
+		<entity schema="dw_hvfhv_lgl.INSTANCE" name="dim_license_type" color="C1D8EE" x="833" y="187" />
+		<entity schema="dw_hvfhv_lgl.INSTANCE" name="dim_location" color="C1D8EE" x="85" y="51" />
+		<entity schema="dw_hvfhv_lgl.INSTANCE" name="facts_trips" color="C1D8EE" x="459" y="289" />
+		<script name="SQL_Editor" id="Editor-851" language="SQL" >
+			<string><![CDATA[CREATE SCHEMA INSTANCE;
+
+CREATE TABLE dw_hvfhv_lgl.INSTANCE.dim_date ( 
+	date_id int64 NOT NULL  ,
+	year_number int64  ,
+	month_number int64  ,
+	day_number int64  ,
+	week_number int64  ,
+	hour_number int64  ,
+	week_of_month int64  ,
+	week_of_year int64  ,
+	month_name string  ,
+	day_name string  ,
+	is_daylight_saving boolean  ,
+	timestamp_isoformat datetime  
+ );
+
+ALTER TABLE dw_hvfhv_lgl.INSTANCE.dim_date ADD PRIMARY KEY ( date_id )  NOT ENFORCED;
+
+CREATE TABLE dw_hvfhv_lgl.INSTANCE.dim_license_type ( 
+	dim_license_type_id int64 NOT NULL  ,
+	license_type string  ,
+	license_name string OPTIONS( description='which designated whethere it is uber/lyft' )   
+ );
+
+ALTER TABLE dw_hvfhv_lgl.INSTANCE.dim_license_type ADD PRIMARY KEY ( dim_license_type_id )  NOT ENFORCED;
+
+CREATE TABLE dw_hvfhv_lgl.INSTANCE.dim_location ( 
+	location_id int64 NOT NULL  ,
+	borough string  ,
+	zone string  ,
+	zipcode string  ,
+	latitude bignumeric  ,
+	longitude bignumeric  
+ );
+
+ALTER TABLE dw_hvfhv_lgl.INSTANCE.dim_location ADD PRIMARY KEY ( location_id )  NOT ENFORCED;
+
+CREATE TABLE dw_hvfhv_lgl.INSTANCE.facts_trips ( 
+	fact_id int64  ,
+	trip_miles bignumeric  ,
+	trip_time bignumeric  ,
+	base_passenger_fare numeric(10,2)  ,
+	tolls numeric(10,2)  ,
+	bcf numeric(10,2)  ,
+	sales_tax numeric(10,2)  ,
+	congestion_surcharge numeric(10,2)  ,
+	airport_fee numeric(10,2)  ,
+	tips numeric(10,2)  ,
+	driver_pay numeric(10,2)  ,
+	temperature bignumeric  ,
+	rain_precipitation bignumeric  ,
+	snow_precipitation bignumeric  ,
+	subway_fare numeric  ,
+	bus_fare numeric(10,2)  ,
+	lirr_fare numeric(10,2)  ,
+	mnr_fare numeric(10,2)  ,
+	pickup_date_id int64 NOT NULL  ,
+	dropoff_date_id int64 NOT NULL  ,
+	pickup_location_id int64 NOT NULL  ,
+	request_onscene_date_id int64 NOT NULL  ,
+	dropoff_location_id int64 NOT NULL  ,
+	request_date_id int64  ,
+	license_type_id int64 NOT NULL  
+ );
+
+ALTER TABLE dw_hvfhv_lgl.INSTANCE.facts_trips ADD CONSTRAINT fk_facts_trips_dim_date FOREIGN KEY ( pickup_date_id ) REFERENCES dw_hvfhv_lgl.INSTANCE.dim_date( date_id ) NOT ENFORCED;
+
+ALTER TABLE dw_hvfhv_lgl.INSTANCE.facts_trips ADD CONSTRAINT fk_facts_trips_dim_date_0 FOREIGN KEY ( dropoff_date_id ) REFERENCES dw_hvfhv_lgl.INSTANCE.dim_date( date_id ) NOT ENFORCED;
+
+ALTER TABLE dw_hvfhv_lgl.INSTANCE.facts_trips ADD CONSTRAINT fk_facts_trips_dim_license_type FOREIGN KEY ( license_type_id ) REFERENCES dw_hvfhv_lgl.INSTANCE.dim_license_type( dim_license_type_id ) NOT ENFORCED;
+
+ALTER TABLE dw_hvfhv_lgl.INSTANCE.facts_trips ADD CONSTRAINT fk_facts_trips_dim_location FOREIGN KEY ( pickup_location_id ) REFERENCES dw_hvfhv_lgl.INSTANCE.dim_location( location_id ) NOT ENFORCED;
+
+ALTER TABLE dw_hvfhv_lgl.INSTANCE.facts_trips ADD CONSTRAINT fk_facts_trips_dim_location_0 FOREIGN KEY ( dropoff_location_id ) REFERENCES dw_hvfhv_lgl.INSTANCE.dim_location( location_id ) NOT ENFORCED;
+
+ALTER TABLE dw_hvfhv_lgl.INSTANCE.facts_trips ADD CONSTRAINT fk_facts_trips_dim_date_1 FOREIGN KEY ( request_date_id ) REFERENCES dw_hvfhv_lgl.INSTANCE.dim_date( date_id ) NOT ENFORCED;
+
+ALTER TABLE dw_hvfhv_lgl.INSTANCE.facts_trips ADD CONSTRAINT fk_facts_trips_dim_date_2 FOREIGN KEY ( request_onscene_date_id ) REFERENCES dw_hvfhv_lgl.INSTANCE.dim_date( date_id ) NOT ENFORCED;
+]]></string>
+		</script>
+	</layout>
+</project>

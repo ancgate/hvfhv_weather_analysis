@@ -1,1 +1,1 @@
-Here is the diagrams the reports
+Here is the diagrams the reports.
